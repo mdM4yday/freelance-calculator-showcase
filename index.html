@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Custom Web Calculators &amp; Telegram Automation for Small Business</title>
+<meta name="description" content="Custom web calculators, interactive tools and Telegram bots for small business. 24h delivery, no subscriptions, mobile-first.">
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  html { scroll-behavior: smooth; }
+  body {
+    background-color: #0f172a;
+    background-image:
+      radial-gradient(60rem 40rem at 15% -10%, rgba(99,102,241,.25), transparent 60%),
+      radial-gradient(50rem 35rem at 90% 10%, rgba(139,92,246,.20), transparent 60%),
+      radial-gradient(40rem 30rem at 50% 100%, rgba(99,102,241,.12), transparent 60%);
+    background-attachment: fixed;
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  .glass { background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.09); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+  .grad-text { background: linear-gradient(90deg,#a5b4fc,#c4b5fd,#818cf8); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .field { width:100%; background: rgba(15,23,42,.6); border:1px solid rgba(255,255,255,.12); border-radius:.75rem; padding:.7rem .9rem; color:#e2e8f0; outline:none; transition:border-color .2s, box-shadow .2s; }
+  .field:focus { border-color:#818cf8; box-shadow:0 0 0 3px rgba(129,140,248,.25); }
+  .field.invalid { border-color:#f87171; }
+  details > summary { list-style:none; cursor:pointer; }
+  details > summary::-webkit-details-marker { display:none; }
+  details[open] .chev { transform: rotate(180deg); }
+  .chev { transition: transform .2s; }
+  .opt:has(input:checked) { border-color:#818cf8; background:rgba(99,102,241,.15); }
+</style>
+</head>
+<body class="text-slate-200 antialiased">
+
+<!-- NAV -->
+<header class="sticky top-0 z-40 glass border-x-0 border-t-0">
+  <div class="max-w-6xl mx-auto px-5 h-16 flex items-center justify-between">
+    <a href="#top" class="font-bold text-white tracking-tight">Calc<span class="grad-text">Craft</span></a>
+    <nav class="hidden sm:flex gap-6 text-sm text-slate-300">
+      <a href="#calculator" class="hover:text-white">Pricing</a>
+      <a href="#why" class="hover:text-white">Why us</a>
+      <a href="#faq" class="hover:text-white">FAQ</a>
+    </nav>
+    <a href="#calculator" class="text-sm font-semibold bg-indigo-500 hover:bg-indigo-400 text-white px-4 py-2 rounded-lg transition">Get a quote</a>
+  </div>
+</header>
+
+<main id="top">
+<!-- HERO -->
+<section class="max-w-6xl mx-auto px-5 pt-16 sm:pt-24 pb-16 text-center">
+  <div class="inline-flex flex-wrap justify-center gap-2 mb-6">
+    <span class="glass rounded-full px-3 py-1 text-xs text-slate-300">⚡ 24h delivery</span>
+    <span class="glass rounded-full px-3 py-1 text-xs text-slate-300">🚫 No subscription lock-in</span>
+    <span class="glass rounded-full px-3 py-1 text-xs text-slate-300">📱 Mobile-first</span>
+  </div>
+  <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight text-white leading-tight">
+    Custom Web Calculators &amp; <span class="grad-text">Telegram Automation</span> for Small Business
+  </h1>
+  <p class="mt-6 max-w-2xl mx-auto text-lg text-slate-400">
+    Turn visitors into qualified leads with interactive tools that quote, qualify and notify you instantly. Delivered in 24 hours, owned by you, with zero monthly fees.
+  </p>
+  <div class="mt-9 flex flex-col sm:flex-row gap-3 justify-center">
+    <a href="#calculator" class="bg-gradient-to-r from-indigo-500 to-violet-500 hover:from-indigo-400 hover:to-violet-400 text-white font-semibold px-7 py-3.5 rounded-xl shadow-lg shadow-indigo-500/25 transition">Calculate your price</a>
+    <a href="#why" class="glass hover:bg-white/10 text-white font-semibold px-7 py-3.5 rounded-xl transition">See why clients stay</a>
+  </div>
+  <div class="mt-12 flex flex-wrap justify-center gap-x-8 gap-y-3 text-sm text-slate-400">
+    <span>★★★★★ 5.0 average rating</span>
+    <span>✔ 100+ projects shipped</span>
+    <span>🌍 Clients in 20+ countries</span>
+  </div>
+</section>
+
+<!-- CALCULATOR -->
+<section id="calculator" class="max-w-6xl mx-auto px-5 py-16 scroll-mt-16">
+  <div class="text-center mb-10">
+    <h2 class="text-3xl sm:text-4xl font-bold text-white">Instant <span class="grad-text">price calculator</span></h2>
+    <p class="mt-3 text-slate-400">Pick a service, add extras, and send your order straight to Telegram.</p>
+  </div>
+
+  <div class="grid lg:grid-cols-5 gap-6">
+    <div class="lg:col-span-3 glass rounded-2xl p-6 sm:p-8 space-y-8">
+      <div>
+        <h3 class="text-sm font-semibold uppercase tracking-wider text-indigo-300 mb-3">1 · Service type</h3>
+        <div id="services" class="grid sm:grid-cols-2 gap-3"></div>
+      </div>
+      <div>
+        <h3 class="text-sm font-semibold uppercase tracking-wider text-indigo-300 mb-3">2 · Add-ons</h3>
+        <div id="addons" class="space-y-3"></div>
+      </div>
+      <div>
+        <h3 class="text-sm font-semibold uppercase tracking-wider text-indigo-300 mb-3">3 · Your details</h3>
+        <div class="space-y-3">
+          <div>
+            <label for="name" class="block text-sm text-slate-400 mb-1">Name</label>
+            <input id="name" class="field" type="text" autocomplete="name" placeholder="Jane Doe">
+          </div>
+          <div>
+            <label for="contact" class="block text-sm text-slate-400 mb-1">Email or Telegram @username</label>
+            <input id="contact" class="field" type="text" autocomplete="off" placeholder="you@example.com or @username">
+          </div>
+          <div>
+            <label for="notes" class="block text-sm text-slate-400 mb-1">Project notes <span class="text-slate-500">(optional)</span></label>
+            <textarea id="notes" rows="3" class="field" placeholder="Tell us about your project..."></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="lg:col-span-2">
+      <div class="glass rounded-2xl p-6 sm:p-8 lg:sticky lg:top-24">
+        <h3 class="text-sm font-semibold uppercase tracking-wider text-indigo-300 mb-4">Your estimate</h3>
+        <ul id="breakdown" class="space-y-2 text-sm text-slate-300 mb-5"></ul>
+        <div class="border-t border-white/10 pt-5 flex items-end justify-between">
+          <span class="text-slate-400">Total</span>
+          <span id="total" class="text-5xl font-extrabold text-white tabular-nums" aria-live="polite">$0</span>
+        </div>
+        <p class="text-xs text-slate-500 mt-2">One-time price in USD. No subscriptions.</p>
+        <button id="order" type="button" class="mt-6 w-full bg-gradient-to-r from-indigo-500 to-violet-500 hover:from-indigo-400 hover:to-violet-400 text-white font-semibold py-3.5 rounded-xl shadow-lg shadow-indigo-500/25 transition flex items-center justify-center gap-2">
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.9 4.3 18.6 19.7c-.2 1-.9 1.3-1.7.8l-4.8-3.6-2.3 2.2c-.3.3-.5.5-1 .5l.3-4.9 8.9-8c.4-.3-.1-.5-.6-.2L6.4 13 1.7 11.5c-1-.3-1-1 .2-1.5L20.3 3c.9-.3 1.7.2 1.6 1.3z"/></svg>
+          Order via Telegram
+        </button>
+        <p id="msg" class="text-sm mt-3 min-h-[1.25rem] text-rose-300" role="alert"></p>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<!-- WHY -->
+<section id="why" class="max-w-6xl mx-auto px-5 py-16 scroll-mt-16">
+  <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-10">Why work <span class="grad-text">with us</span></h2>
+  <div class="grid md:grid-cols-3 gap-6">
+    <div class="glass rounded-2xl p-7">
+      <div class="w-11 h-11 rounded-xl bg-indigo-500/20 text-indigo-300 flex items-center justify-center mb-4">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+      </div>
+      <h3 class="text-lg font-semibold text-white mb-2">Lightning-fast delivery</h3>
+      <p class="text-slate-400 text-sm">Most projects ship within 24 hours, with a 12-hour rush option when you're on a deadline.</p>
+    </div>
+    <div class="glass rounded-2xl p-7">
+      <div class="w-11 h-11 rounded-xl bg-violet-500/20 text-violet-300 flex items-center justify-center mb-4">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7l8-4z"/><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4"/></svg>
+      </div>
+      <h3 class="text-lg font-semibold text-white mb-2">You own everything</h3>
+      <p class="text-slate-400 text-sm">Clean, documented code and zero lock-in. No monthly fees, no hostage hosting, no surprises.</p>
+    </div>
+    <div class="glass rounded-2xl p-7">
+      <div class="w-11 h-11 rounded-xl bg-indigo-500/20 text-indigo-300 flex items-center justify-center mb-4">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2"/><path stroke-linecap="round" d="M11 18h2"/></svg>
+      </div>
+      <h3 class="text-lg font-semibold text-white mb-2">Built mobile-first</h3>
+      <p class="text-slate-400 text-sm">Your customers are on their phones. Every tool is tuned for small screens and instant load times.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" class="max-w-3xl mx-auto px-5 py-16 scroll-mt-16">
+  <h2 class="text-3xl sm:text-4xl font-bold text-white text-center mb-10">Frequently asked <span class="grad-text">questions</span></h2>
+  <div class="space-y-3" id="faqList"></div>
+</section>
+</main>
+
+<footer class="border-t border-white/10 mt-10">
+  <div class="max-w-6xl mx-auto px-5 py-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-slate-500">
+    <p>&copy; <span id="year">2026</span> CalcCraft. All rights reserved.</p>
+    <div class="flex gap-5">
+      <a class="hover:text-white" href="https://github.com/mdM4yday" target="_blank" rel="noopener">GitHub</a>
+      <a class="hover:text-white" href="#calculator">Contact / Order</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  const SERVICES = [
+    { id: 'landing', name: 'Responsive Landing Page', price: 45 },
+    { id: 'bot', name: 'Telegram Lead Bot', price: 40 },
+    { id: 'calc', name: 'Custom Interactive Web Calculator', price: 35 },
+    { id: 'scraper', name: 'Web Data Scraper', price: 30 }
+  ];
+  const ADDONS = [
+    { id: 'rush', name: 'Rush Delivery within 12h', price: 15 },
+    { id: 'i18n', name: 'Bilingual EN/RU/UZ localization', price: 20 },
+    { id: 'alert', name: 'Direct Telegram Alert Integration', price: 10 }
+  ];
+  const FAQ = [
+    ['How fast can you deliver?', 'Most projects are delivered within 24 hours. Add Rush Delivery and we ship within 12 hours.'],
+    ['How does payment work?', 'You send your order via Telegram, we confirm scope and price, and you pay securely through the platform we agree on. Final files are released on payment.'],
+    ['Do you offer revisions?', 'Yes. Every order includes revisions until the result matches the agreed scope, with no hidden fees.'],
+    ['What tech stack do you use?', 'Clean HTML5, Tailwind CSS and vanilla JavaScript for the web, and the official Telegram Bot API for automation. No heavy frameworks and no lock-in.']
+  ];
+
+  const $ = (id) => document.getElementById(id);
+  const fmt = (n) => '$' + n;
+  let selected = 'landing';
+  const addons = new Set();
+  let shown = 0, raf;
+
+  // Services
+  $('services').innerHTML = SERVICES.map((s) => `
+    <label class="opt cursor-pointer flex items-center justify-between gap-3 rounded-xl border border-white/10 bg-white/[.03] px-4 py-3 transition hover:border-indigo-400/60">
+      <span class="flex items-center gap-3">
+        <input type="radio" name="service" value="${s.id}" class="accent-indigo-500" ${s.id === selected ? 'checked' : ''}>
+        <span class="text-sm text-slate-200">${s.name}</span>
+      </span>
+      <span class="text-sm font-semibold text-indigo-300">${fmt(s.price)}</span>
+    </label>`).join('');
+
+  // Addons
+  $('addons').innerHTML = ADDONS.map((a) => `
+    <label class="opt cursor-pointer flex items-center justify-between gap-3 rounded-xl border border-white/10 bg-white/[.03] px-4 py-3 transition hover:border-indigo-400/60">
+      <span class="flex items-center gap-3">
+        <input type="checkbox" value="${a.id}" class="accent-indigo-500 w-4 h-4">
+        <span class="text-sm text-slate-200">${a.name}</span>
+      </span>
+      <span class="text-sm font-semibold text-violet-300">+${fmt(a.price)}</span>
+    </label>`).join('');
+
+  // FAQ
+  $('faqList').innerHTML = FAQ.map((f) => `
+    <details class="glass rounded-xl px-5 py-4">
+      <summary class="flex items-center justify-between gap-4 font-medium text-white">
+        ${f[0]}
+        <svg class="chev w-5 h-5 shrink-0 text-indigo-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+      </summary>
+      <p class="mt-3 text-sm text-slate-400">${f[1]}</p>
+    </details>`).join('');
+
+  function compute() {
+    const svc = SERVICES.find((s) => s.id === selected);
+    const adds = ADDONS.filter((a) => addons.has(a.id));
+    const total = svc.price + adds.reduce((t, a) => t + a.price, 0);
+    return { svc, adds, total };
+  }
+
+  function animateTo(target) {
+    cancelAnimationFrame(raf);
+    const from = shown, start = performance.now(), dur = 350;
+    (function step(now) {
+      const t = Math.min(1, (now - start) / dur);
+      shown = Math.round(from + (target - from) * (1 - Math.pow(1 - t, 3)));
+      $('total').textContent = fmt(shown);
+      if (t < 1) raf = requestAnimationFrame(step);
+    })(start);
+  }
+
+  function render() {
+    const { svc, adds, total } = compute();
+    $('breakdown').innerHTML =
+      `<li class="flex justify-between gap-3"><span>${svc.name}</span><span>${fmt(svc.price)}</span></li>` +
+      adds.map((a) => `<li class="flex justify-between gap-3 text-slate-400"><span>+ ${a.name}</span><span>${fmt(a.price)}</span></li>`).join('');
+    animateTo(total);
+  }
+
+  document.querySelectorAll('input[name="service"]').forEach((el) =>
+    el.addEventListener('change', () => { selected = el.value; render(); }));
+  document.querySelectorAll('#addons input').forEach((el) =>
+    el.addEventListener('change', () => { el.checked ? addons.add(el.value) : addons.delete(el.value); render(); }));
+
+  $('order').addEventListener('click', () => {
+    const name = $('name').value.trim();
+    const contact = $('contact').value.trim();
+    const notes = $('notes').value.trim();
+    ['name', 'contact'].forEach((id) => $(id).classList.remove('invalid'));
+    $('msg').textContent = '';
+    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact);
+    const tgOk = /^@?[A-Za-z0-9_]{5,32}$/.test(contact);
+    if (!name) { $('name').classList.add('invalid'); $('msg').textContent = 'Please enter your name.'; $('name').focus(); return; }
+    if (!(emailOk || tgOk)) { $('contact').classList.add('invalid'); $('msg').textContent = 'Enter a valid email or Telegram @username.'; $('contact').focus(); return; }
+
+    const { svc, adds, total } = compute();
+    const lines = [
+      'New order request',
+      '',
+      'Name: ' + name,
+      'Contact: ' + contact,
+      '',
+      'Service: ' + svc.name + ' (' + fmt(svc.price) + ')',
+      'Add-ons: ' + (adds.length ? adds.map((a) => a.name + ' (+' + fmt(a.price) + ')').join(', ') : 'none'),
+      'TOTAL: ' + fmt(total) + ' USD'
+    ];
+    if (notes) lines.push('', 'Notes: ' + notes);
+    const url = 'https://t.me/share/url?url=' + encodeURIComponent(location.href.split('#')[0]) +
+                '&text=' + encodeURIComponent(lines.join('\n'));
+    window.open(url, '_blank', 'noopener');
+  });
+
+  $('year').textContent = new Date().getFullYear();
+  render();
+})();
+</script>
+</body>
+</html>
